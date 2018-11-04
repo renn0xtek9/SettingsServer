@@ -1,7 +1,7 @@
 var jsonsettings;
 class Parameter{
 	constructor(succesivekeys,array){
-		this.parentkeys=succesivekeys;
+		this.parentkeys=succesivekeys.slice();
 		this.array=array;}
 	getUI(){
 		try{
@@ -32,11 +32,27 @@ class Parameter{
 			console.log("Problem initializing parameters locating in "+this.succesivekeys);
 		}
 	}
+	getValueString(value){
+		//TODO wrap if stting
+		return value;
+	}
+	getModif(value){		
+		return {name: this.array["name"],
+			value: this.getValueString(value)};
+	}
 	valueChanged(value){
 		console.log("Value Changed");
-		//TODO transofrm successive keys to a json (build the payload)
-		var keystojson;
-		sendModificationToServer(keystojson);
+		
+ 		var modif=this.getModif(value);
+		var jsonobj=modif;
+		for (var i=this.parentkeys.length-1;i>-1;i--)
+		{
+			console.log(i);
+			var newobj={};
+			newobj[this.parentkeys[i]]=jsonobj;
+			jsonobj=newobj;
+		}
+		sendModificationToServer(jsonobj);
 		try{
 			document.getElementById(this.array["name"]+"maininput").value=value;
 		}
@@ -48,7 +64,7 @@ class Parameter{
 		}
 		catch(e){
 			console.log("Could not get element by id:"+this.array["name"]+"slider");
-		}		
+		}	
 	}
 	makeSlideParameters(elem){
 		var slidecontainerdiv=document.createElement("span");
@@ -82,8 +98,6 @@ function UpdateSettingsFromServer()
 	jsonsettings=JSON.parse(response);
 	parameterlist=[];
 }
-
-
 function httpGet(url)
 {
 	var xmlHttp = new XMLHttpRequest();
@@ -91,8 +105,6 @@ function httpGet(url)
 	xmlHttp.send( null );
 	return xmlHttp.responseText;
 }
-
-
 function getTitle()
 {
 	UpdateSettingsFromServer();
@@ -103,31 +115,7 @@ function getTitle()
 	var element = document.getElementById("titlediv");
 	element.appendChild(para);
 }
-function makeSlideParameters(elem){
-	var slidecontainerdiv=document.createElement("span");
-	slidecontainerdiv.display="block";
-	slidecontainerdiv.whitespace="nowrap";
-	slidecontainerdiv.classList.add("slidecontainer");
-	var input=document.createElement("input");
-	input.min=elem["min"];
-	input.max=elem["max"];
-	input.type="range";
-	input.value=elem["value"];
-	input.classList.add("slider");
-	input.id=elem["name"]+"slider";
-	if ("step" in elem){
-		input.step=elem["step"];
-	}
-	//TODO connect change of input to the main input box
-	input.oninput=function(){
-		var maininput=document.getElementById(elem["name"]+"maininput");
-		maininput.value=input.value;
-	};	
-	slidecontainerdiv.appendChild(input);
-	return slidecontainerdiv;
-}
 function treatParameters(parentdivid,array,successivekeyarrays){
-// 	console.log("parameters hit !");
 	for (elem in array)
 	{
 		try{
@@ -141,7 +129,6 @@ function treatParameters(parentdivid,array,successivekeyarrays){
 		}
 	}
 }
-
 function recurseIntoParametersTree(parentdivid,startobject,successivekeyarrays){
 	for (k in startobject)
 	{
@@ -168,19 +155,16 @@ function recurseIntoParametersTree(parentdivid,startobject,successivekeyarrays){
 		{
 			treatParameters(parentdivid,startobject[k],successivekeyarrays);
 		}		
-	}
-	console.log(parameterlist);
-	
+	}	
 }
-
-
 function getContent()
 {
 	UpdateSettingsFromServer();
 	var title=Object.keys(jsonsettings)[0];
 	recurseIntoParametersTree("parameterslistdiv",jsonsettings[title],[title]);
 }
-function sendModificationToServer(json,value){
-	
+function sendModificationToServer(json){
+	console.log(json);	
+	//TODO send a post request to the server for him to actualize the thing !
 };
 	
