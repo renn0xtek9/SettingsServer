@@ -1,0 +1,24 @@
+{
+"sasisettings": {
+	"LED":{
+		"parameters": [
+		{"name":"HomeEffectDuration", "value": 1.0, "type":"double","min":0.0,"max":10.0,"step":0.1},
+		{"name":"CancelEffectDuration", "value": 1.0, "type":"double","min":0.0,"max":10.0,"step":0.1},
+		{"name":"bg_brightness", "value": 0.3, "type":"double","min":0.0,"max":1.0,"step":0.01},
+    	{"name":"WaveBrightness", "value":  3, "type":"int","min":1,"max":10,"step":1},
+    	{"name":"wave_brightness_mute","value": 2, "type":"int","min":0,"max":10},
+    	{"name":"MuteAnimationSpeed", "value": 2.0, "type":"double","min":0.0,"max":10.0,"step":0.1},
+    	{"name":"MuteAnimationDuration", "value":  1.0, "type":"double","min":0.0,"max":10.0,"step":0.1}
+		]
+		},
+	"Gesture":{
+		"parameters":[
+		{"name":"DelayForGestureStart", "value": 150},
+		{"name":"DelayForFingerFly", "value": 150}
+		]
+		},
+	"CAN":{
+		"parameters":[
+		]
+		}	
+}}
