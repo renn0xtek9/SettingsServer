@@ -16,7 +16,9 @@ h2{
 .parameterinputbox{
 	text-align:right;
 	color: red;
-	width:5%;	
+	width:5%;
+	margin: 0px 10px;
+	border-radius: 3px;	
 }
 
 .slidecontainer {
