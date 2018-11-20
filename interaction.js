@@ -37,8 +37,11 @@ class Parameter{
 		return value;
 	}
 	getModif(value){		
-		return {name: this.array["name"],
-			value: this.getValueString(value)};
+		var arr={parameters:[{name: this.array["name"],value: this.getValueString(value)}]};
+		
+		return arr;
+// 		return {name: this.array["name"],
+// 			value: this.getValueString(value)};
 	}
 	valueChanged(value){
 		console.log("Value Changed");
@@ -164,7 +167,8 @@ function getContent()
 	recurseIntoParametersTree("parameterslistdiv",jsonsettings[title],[title]);
 }
 function sendModificationToServer(json){
-	console.log(json);	
-	//TODO send a post request to the server for him to actualize the thing !
+	console.log(json);
+	var xhttp = new XMLHttpRequest();
+	xhttp.open('POST','settings.html',true);
+	xhttp.send(JSON.stringify(json));
 };
-	
