@@ -16,7 +16,22 @@ class Parameter{
 
 			var instance=this;
 			maininput.oninput=function(){
-				instance.valueChanged(maininput.value);
+				var value=maininput.value;				//This is the default: we return it as a string
+				console.log(value);
+				if ("type" in instance.array){
+					if(instance.array["type"]=="double")
+					{
+						value=parseFloat(value);
+					}
+					if(instance.array["type"]=="int")
+					{
+						value=parseInt(value);
+					}
+				}
+				else {
+					console.log("No array");
+				}
+				instance.valueChanged(value);
 			};
 			block.appendChild(textnode);
 			block.appendChild(maininput);			
@@ -37,11 +52,8 @@ class Parameter{
 		return value;
 	}
 	getModif(value){		
-		var arr={parameters:[{name: this.array["name"],value: this.getValueString(value)}]};
-		
+		var arr={parameters:[{name: this.array["name"],value: this.getValueString(value)}]};		
 		return arr;
-// 		return {name: this.array["name"],
-// 			value: this.getValueString(value)};
 	}
 	valueChanged(value){
 		console.log("Value Changed");
@@ -86,7 +98,22 @@ class Parameter{
 		}
 		var instance=this
 		input.oninput=function(){
-			instance.valueChanged(input.value);
+			var value=input.value;				//This is the default: we return it as a string
+			console.log(value);
+			if ("type" in instance.array){
+				if(instance.array["type"]=="double")
+				{
+					value=parseFloat(value);
+				}
+				if(instance.array["type"]=="int")
+				{
+					value=parseInt(value);
+				}
+			}
+			else {
+				console.log("No array");
+			}
+			instance.valueChanged(value);
 		};	
 		slidecontainerdiv.appendChild(input);
 		return slidecontainerdiv;
