@@ -1,9 +1,21 @@
 var http = require('http');
-const pathtosettings = "settings.json"
 var url = require ('url');
 var fs = require('fs');
-var child_process = require('child_process');
+var pathtosettings = "settings.json"
 var hostname = '127.0.0.1';
+process.argv.forEach(function (val, index, array) {
+	if (index==2)
+	{	
+		pathtosettings=val;
+	}
+	if (index==3)
+	{	
+ 		hostname=val;
+	}
+});
+
+
+var child_process = require('child_process');
 var port = 3001;
 
 var server = http.createServer(function (req, res) {
@@ -11,7 +23,14 @@ var server = http.createServer(function (req, res) {
 	if (req.method=='GET')
 	{
 		console.log("GET request for "+reqparsed.pathname);
-		var filename="./"+reqparsed.pathname;
+		if (reqparsed.pathname!="/settings.json")
+		{
+			var filename="./"+reqparsed.pathname;
+		}
+		else 
+		{
+			var filename=pathtosettings;
+		}
 		fs.readFile(filename,function(err,data){
 			if (err) {
 				res.writeHead(404, {'Content-Type': 'text/html'});
@@ -43,11 +62,13 @@ var server = http.createServer(function (req, res) {
 		req.on('end', function () {
 			AnalyzePostRequest(body);
 		});
+		res.writeHead(200,{'Content-Type': 'text/html'});
+		res.end('post received');
 	}	
 });
 
 server.listen(port, hostname, () => {
-	 console.log(`Server running at http://${hostname}:${port}/`);
+	console.log(`Server running at http://${hostname}:${port}/`);
 });
 
 function AnalyzePostRequest(body) {
@@ -63,7 +84,7 @@ function ReplaceParameter(newset,oldset)
 }
 function ParseAndModify(jsonobject,settingsobject)
 {
-	console.log(jsonobject);
+// 	console.log(jsonobject);
 	for (var key in jsonobject)
 	{
 		if(jsonobject.hasOwnProperty(key) && settingsobject.hasOwnProperty(key) && key != 'parameters' )
@@ -86,8 +107,6 @@ function ParseAndModify(jsonobject,settingsobject)
 							}
 							j+=1;
 						}
-						console.log (jsonobject[key][p]);
-						console.log (settingsobject[key][j]);
 						ReplaceParameter(jsonobject[key][p],settingsobject[key][j]);
 					}
 				}
@@ -107,13 +126,12 @@ function UpdateSettingsFileWithJSONObject(jsonobject)
 {
 	settings = JSON.parse(fs.readFileSync(pathtosettings, 'utf8'));
 	ParseAndModify(jsonobject,settings);
-	console.log("here");
-	console.log(jsonobject);
-	console.log(settings);
+	console.log("Will update the settings with element:"+JSON.stringify(jsonobject));
 	fs.writeFile(pathtosettings, JSON.stringify(settings,null,2), function(err) {
 		if (err) {
 			console.log(err);
 		}
 	});
+	console.log("File successfully updated");
 }
 
