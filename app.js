@@ -110,7 +110,7 @@ function UpdateSettingsFileWithJSONObject(jsonobject)
 	console.log("here");
 	console.log(jsonobject);
 	console.log(settings);
-	fs.writeFile('result.json', JSON.stringify(settings,null,2), function(err) {
+	fs.writeFile(pathtosettings, JSON.stringify(settings,null,2), function(err) {
 		if (err) {
 			console.log(err);
 		}
