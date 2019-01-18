@@ -13,26 +13,30 @@ class Parameter{
 			maininput.id=name+"maininput";
 			maininput.classList.add("parameterinputbox");
 			maininput.value=value;
-
 			var instance=this;
-			maininput.oninput=function(){
-				var value=maininput.value;				//This is the default: we return it as a string
-				console.log(value);
-				if ("type" in instance.array){
-					if(instance.array["type"]=="double")
-					{
-						value=parseFloat(value);
+			maininput.addEventListener("keydown",function(event){
+				console.log(event.key);
+			// maininput.oninput=function(){
+				if(event.key == "Enter"){
+					event.preventDefault();
+					var value=maininput.value;				//This is the default: we return it as a string
+					console.log(value);
+					if ("type" in instance.array){
+						if(instance.array["type"]=="double")
+						{
+							value=parseFloat(value);
+						}
+						if(instance.array["type"]=="int")
+						{
+							value=parseInt(value);
+						}
 					}
-					if(instance.array["type"]=="int")
-					{
-						value=parseInt(value);
+					else {
+						console.log("No array");
 					}
+					instance.valueChanged(value);
 				}
-				else {
-					console.log("No array");
-				}
-				instance.valueChanged(value);
-			};
+			});
 			block.appendChild(textnode);
 			block.appendChild(maininput);			
 			if ("type" in this.array){
